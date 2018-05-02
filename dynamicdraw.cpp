@@ -73,37 +73,7 @@ void dynamicdraw::mouseButtonDown(GraphicsContext* gc, unsigned int button,
 
 
 
-	if (drawingMode == DRAWMODE_LINE) {
-		x0 = x;
-		y0 = y;
-		x1 = x;
-		y1 = y;
-		gc->setMode(GraphicsContext::MODE_XOR);
-		gc->drawLine(x0, y0, x1, y1);
-		isDragging = true;
-
-	} else if (drawingMode == DRAWMODE_POINT) {
-		matrix c(4,4);
-		c = inverseCorrect(x,y,0,
-					       0,0,0,
-					       0,0,0,
-					       m_vc);
-
-		point* myPoint = new point(c[0][0], c[1][0], c[2][0], color);
-		gc->setMode(GraphicsContext::MODE_XOR);
-		myPoint->draw(gc,m_vc);
-		theImage->add(myPoint);
-
-	} else if (drawingMode == DRAWMODE_CIRCLE) {
-		x0 = x;
-		y0 = y;
-		x1 = x;
-		y1 = y;
-		gc->setMode(GraphicsContext::MODE_XOR);
-		gc->drawCircle(x0, y0, 1);
-		isDragging = true;
-
-	} else if (drawingMode == DRAWMODE_TRI) {
+	if (drawingMode == DRAWMODE_TRI) {
 		if (state == STATE_NEWTRI) {
 			// drawing the first line
 			x0 = x;
@@ -126,7 +96,8 @@ void dynamicdraw::mouseButtonDown(GraphicsContext* gc, unsigned int button,
 			  drawingMode == DRAWMODE_TRANSLATE){
 		x0 = x;
 		y0 = y;
-		gc->setMode(GraphicsContext::MODE_XOR);
+		gc->setMode(GraphicsContext::MODE_NORMAL);
+		//gc->setMode(GraphicsContext::MODE_XOR);
 		isDragging = true;
 	}
 }
@@ -141,39 +112,7 @@ void dynamicdraw::mouseButtonUp(GraphicsContext* gc, unsigned int button, int x,
 				       x2,y2,0,
 				       m_vc);
 
-	if (drawingMode == DRAWMODE_LINE) {
-		if (isDragging) {
-			gc->drawLine(x0, y0, x1, y1);
-			x1 = x;
-			y1 = y;
-			gc->setMode(GraphicsContext::MODE_NORMAL);
-
-			line* myLine = new line(c[0][0], c[1][0], c[2][0], c[0][1], c[1][1], c[2][1], color);
-			myLine->draw(gc,m_vc);
-			// Add the line to the image and draw it.
-			theImage->add(myLine);
-			isDragging = false;
-		}
-	} else if (drawingMode == DRAWMODE_POINT) {
-		if (isDragging) {
-			// nothing to do here, may as well make sure it's not dragging.
-			gc->setMode(GraphicsContext::MODE_NORMAL);
-			isDragging = false;
-		}
-	} else if (drawingMode == DRAWMODE_CIRCLE) {
-		if (isDragging) {
-			gc->drawCircle(x0, y0, getDistance(x0, y0, x1, y1));
-			x1 = x;
-			y1 = y;
-			gc->setMode(GraphicsContext::MODE_NORMAL);
-
-			circle* myCircle = new circle(c[0][0], c[1][0], c[2][0],
-					getDistance(x0, y0, x1, y1), color);
-			myCircle->draw(gc,m_vc);
-			theImage->add(myCircle);
-			isDragging = false;
-		}
-	} else if (drawingMode == DRAWMODE_TRI) {
+	 if (drawingMode == DRAWMODE_TRI) {
 		if (isDragging) {
 			if (state == STATE_NEWTRI) {
 				gc->drawLine(x0, y0, x1, y1);
@@ -202,28 +141,14 @@ void dynamicdraw::mouseButtonUp(GraphicsContext* gc, unsigned int button, int x,
 	} else if(drawingMode == DRAWMODE_ROTATE ||
 			  drawingMode == DRAWMODE_TRANSLATE){
 		if(isDragging){
-			gc->setMode(GraphicsContext::MODE_NORMAL);
+			//gc->setMode(GraphicsContext::MODE_NORMAL);
 			isDragging = false;
 		}
 	}
 }
 
 void dynamicdraw::mouseMove(GraphicsContext* gc, int x, int y) {
-	if (drawingMode == DRAWMODE_LINE) {
-		if (isDragging) {
-			gc->drawLine(x0, y0, x1, y1);
-			x1 = x;
-			y1 = y;
-			gc->drawLine(x0, y0, x1, y1);
-		}
-	} else if (drawingMode == DRAWMODE_CIRCLE) {
-		if (isDragging) {
-			gc->drawCircle(x0, y0, getDistance(x0, y0, x1, y1));
-			x1 = x;
-			y1 = y;
-			gc->drawCircle(x0, y0, getDistance(x0, y0, x1, y1));
-		}
-	} else if (drawingMode == DRAWMODE_TRI) {
+	if (drawingMode == DRAWMODE_TRI) {
 		if (isDragging) {
 			if (state == STATE_NEWTRI) {
 				gc->drawLine(x0, y0, x1, y1);
@@ -241,22 +166,25 @@ void dynamicdraw::mouseMove(GraphicsContext* gc, int x, int y) {
 		}
 	} else if(drawingMode == DRAWMODE_ROTATE){
 		if(isDragging){
-			paint(gc,m_vc);
-			m_vc->rotate((x0 - x)/30.0,0,0);
+			if(std::abs(x0 - x) > 4 || std::abs(y0 - y) > 4){
+			m_vc->rotate((x0 - x)/10.0,(y0 - y)/10.0,0);
 			paint(gc,m_vc);
 
 
 			x0 = x;
 			y0 = y;
+			}
 		}
 	} else if(drawingMode == DRAWMODE_TRANSLATE){
 		if(isDragging){
-			paint(gc,m_vc);
+			//paint(gc,m_vc);
+			if(std::abs(x0 - x) > 4 || std::abs(y0 - y) > 4){
 			m_vc->translate(-(x0 - x), -(y0 - y),0);
 			paint(gc,m_vc);
 
 			x0 = x;
 			y0 = y;
+			}
 		}
 	}
 }
@@ -264,16 +192,7 @@ void dynamicdraw::mouseMove(GraphicsContext* gc, int x, int y) {
 void dynamicdraw::keyUp(GraphicsContext* gc, unsigned int keycode) {
 	if (!isDragging && state != STATE_ENDTRI) {
 		// not allowed to change tools while dragging or completing a triangle.
-		if (keycode == 'p') {
-			drawingMode = DRAWMODE_POINT;
-			return;
-		} else if (keycode == 'l') {
-			drawingMode = DRAWMODE_LINE;
-			return;
-		} else if (keycode == 'c') {
-			drawingMode = DRAWMODE_CIRCLE;
-			return;
-		} else if (keycode == 't') {
+		if (keycode == 't') {
 			drawingMode = DRAWMODE_TRI;
 			return;
 
@@ -298,6 +217,25 @@ void dynamicdraw::keyUp(GraphicsContext* gc, unsigned int keycode) {
 			paint(gc, m_vc);
 			return;
 		}
+
+		if(keycode == '<'){
+			for(int x = 0; x < 360; x++){
+				sleep(0.005);
+				m_vc->rotate(1,0,0);
+				paint(gc,m_vc);
+			}
+			for(int x = 0; x < 360; x++){
+				sleep(0.015);
+				m_vc->rotate(0,1,0);
+				paint(gc,m_vc);
+			}
+			for(int x = 0; x < 360; x++){
+				sleep(0.015);
+				m_vc->rotate(0,0,1);
+				paint(gc,m_vc);
+			}
+		}
+
 		// Color selection
 		if (keycode == '1') {
 			color = GraphicsContext::RED;
@@ -361,6 +299,7 @@ matrix inverseCorrect(double x0, double y0, double z0,
 	c[0][0] = x0; c[1][0] = y0; c[2][0] = z0; c[3][0] = 1;
 	c[0][1] = x1; c[1][1] = y1; c[2][1] = z1; c[3][1] = 1;
 	c[0][2] = x2; c[1][2] = y2; c[2][2] = z2; c[3][2] = 1;
+											  c[3][3] = 1;
 
 	return vc->applyInverse(c);
 }

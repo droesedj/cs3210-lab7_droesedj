@@ -43,19 +43,28 @@ int main(int argc, char**argv) {
 			  << "\tReset View= z\n"
 			  << "When the program is closed, the image will be saved to output.txt.\n";
 
-	if(argc == 2){
+	if(argc == 3){
 		// load the specified file first.
 		std::string arg2 = argv[1];
+		std::string arg3 = argv[2];
 		std::ifstream input;
-		input.open(arg2);
+		input.open(arg3);
 
-		if(input.is_open()){
-			dd.theImage->in(input);
+		if(arg2.compare("STL") == 0){
+			// load STL file
+			dd.theImage->parseSTLFile(arg3);
 			dd.paint(gc);
-			std::cout << "LOADED IMAGE FILE: " << arg2 << '\n';
-			input.close();
-		}else {
-			std::cout << "FILE READ ERROR: COULD NOT OPEN " << arg2 << '\n';
+			std::cout << "LOADED STL FILE: " << arg3 << '\n';
+		} else if(arg2.compare("IMG") == 0){
+		// Load old image file
+			if (input.is_open()) {
+				dd.theImage->in(input);
+				dd.paint(gc);
+				std::cout << "LOADED IMAGE FILE: " << arg3 << '\n';
+				input.close();
+			} else {
+				std::cout << "FILE READ ERROR: COULD NOT OPEN " << arg3 << '\n';
+			}
 		}
 	}
 

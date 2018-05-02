@@ -106,6 +106,8 @@ public:
 	*/
 	void in(std::istream& input);
 
+	void parseSTLFile(std::string file);
+
 };
 
 #endif /* IMAGE_H_ */

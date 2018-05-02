@@ -15,6 +15,11 @@
 
 using namespace std;
 
+
+
+matrix* parseVertex(string data);
+
+
 image::image(){}
 
 image::image(image& from){
@@ -106,5 +111,114 @@ std::ostream& image::out(std::ostream& output){
 		i->out(output);
 	}
 	output << "IMAGE-END\n";
+	return output;
+}
+
+
+
+/**
+ * Parses a given STL file into a Solid.
+ * @param file .STL file to be loaded.
+ * @return Solid parsed from the file.
+ *
+ * Assumes that the file has proper formatting.
+ * This WILL hang if the file does not have proper formatting.
+ */
+void image::parseSTLFile(std::string file){
+	//solid* output = nullptr;
+	//vertex* vertexHead = nullptr;
+	//facet* facetHead = nullptr;
+
+	//vertex* vertIterator = nullptr;
+	//facet* faceIterator = nullptr;
+
+	matrix* p1 = nullptr;
+	matrix* p2 = nullptr;
+	matrix* p3 = nullptr;
+
+	string line;
+	ifstream STL (file);
+	if(STL.is_open()){
+		while(getline(STL,line)){
+			int start = 0;
+			while(line[start] == ' '){
+				start += 1;
+			}
+			string word;
+			stringstream(line) >> word;
+
+			if(word.compare("solid") == 0){
+				// Create the solid from the line
+				//output = parseSolid(line);
+			} else if(word.compare("facet") == 0){
+				//if(facetHead == nullptr){
+					// First facet in the solid, init the head and iterator.
+				//	facetHead = parseFacet(line);
+				//	faceIterator = facetHead;
+				//} else {
+					// Facet comes after the head, advance the iterator and append the new one onto the previous.
+				//	faceIterator->setNext(parseFacet(line));
+				//	faceIterator = faceIterator->getNext();
+				//}
+			} else if(word.compare("outer") == 0){
+				// Start of a vertex loop.  Don't really need to do anything about it though.
+				p1 = nullptr;
+				p2 = nullptr;
+				p3 = nullptr;
+			} else if(word.compare("vertex") == 0){
+				if(p1 == nullptr){
+					p1 = parseVertex(line);
+				} else if(p2 == nullptr){
+					p2 = parseVertex(line);
+				} else if(p3 == nullptr){
+					p3 = parseVertex(line);
+					// create a new triangle.
+					this->add(new triangle(p1,p2,p3));
+				}
+			}else if(word.compare("endfacet") == 0){
+				// End of a facet, attach to the solid, clear the head and iterator.
+			} else if(word.compare("endsolid") == 0){
+				// End of the solid.  Attach the facet head to the solid output.  Clear the iterators.
+				//faceIterator = nullptr;
+				//output->setStartFacet(facetHead);
+				//facetHead = nullptr;
+			} else if(word.compare("endloop") == 0){
+				// End of a vertex loop, attach the verts to the current facet, clear the head and iterator.
+				//vertIterator = nullptr;
+				//faceIterator->setFirstVertex(vertexHead);
+				//vertexHead = nullptr;
+			} else {
+				// Garbage or invalid keyword.  Yell into the console.
+				cout << "COULD NOT FIGURE OUT WHAT " << word << " IS SUPPOSED TO BE!" << '\n';
+			}
+		}
+		STL.close();
+	} else {
+		cout << "Error loading file: " << file << '\n';
+		//return nullptr;
+	}
+	//return output;
+}
+
+
+/**
+ * Parses a vertex from a given line of input data.
+ * Expects data to be in the following format:
+ * "vertex <float x> <float y> <float z>"
+ * @param data
+ * @return Pointer to the newly-created matrix.
+ */
+matrix* parseVertex(string data){
+	double f1, f2, f3;
+	string garbage;
+
+	stringstream(data) >> garbage >> f1 >> f2 >> f3;
+
+	matrix* output = new matrix(4,1);
+	(*output)[0][0] = f1;
+	(*output)[1][0] = f2;
+	(*output)[2][0] = f3;
+	(*output)[3][0] = 1.0;
+
 	return output;
 }

@@ -71,6 +71,15 @@ public:
 	 */
 	void resetTransforms();
 
+	/// X-location of the viewport
+	double origin_x;
+
+	/// Y-location of the viewport
+	double origin_y;
+
+	/// Z-location of the viewport
+	double origin_z;
+
 private:
 
 	/// Stores the homogenous transform matrix
@@ -87,6 +96,7 @@ private:
 
 	/// Inverse matrix of the transform.
 	matrix* inverse;
+
 
 };
 

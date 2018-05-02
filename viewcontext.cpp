@@ -10,6 +10,11 @@
 
 
 viewcontext::viewcontext(){
+
+	origin_x = 0;
+	origin_y = 0;
+	origin_z = 0;
+
 	transform = new matrix(4,4);
 	*transform = matrix::identity(4);
 	inverse = new matrix(4,4);
@@ -48,22 +53,34 @@ matrix* viewcontext::convertToCartesian(matrix* input){
 // | 0			0			0	1 ]
 void viewcontext::rotate(double roll, double pitch, double yaw){
 
-	matrix rotato = matrix::identity(4);
-
-	matrix rotatoInverse = matrix::identity(4);
+	matrix rotatoRoll = matrix::identity(4);
+	matrix rotatoPitch = matrix::identity(4);
+	matrix rotatoYaw = matrix::identity(4);
 
 	// convert degrees to radians.
 	double radRoll = 	roll * (M_PI/180);
-	//double radPitch = 	roll * (M_PI/180);
-	//double radYaw = 	roll * (M_PI/180);
+	double radPitch = 	pitch * (M_PI/180);
+	double radYaw = 	yaw * (M_PI/180);
 
-	rotato[0][0] = cos(radRoll);
-	rotato[0][1] = -sin(radRoll);
-	rotato[1][0] = sin(radRoll);
-	rotato[1][1] = cos(radRoll);
+	// Z-axis rotation
+	rotatoYaw[0][0] = cos(radYaw);
+	rotatoYaw[0][1] = -sin(radYaw);
+	rotatoYaw[1][0] = sin(radYaw);
+	rotatoYaw[1][1] = cos(radYaw);
 
+	// Y-axis rotation
+	rotatoPitch[0][0] = cos(-radPitch);
+	rotatoPitch[0][2] = sin(-radPitch);
+	rotatoPitch[2][0] = -sin(radPitch);
+	rotatoPitch[2][2] = cos(-radPitch);
 
-	*mRotate = rotato * *mRotate;
+	// X-axis rotation
+	rotatoRoll[1][1] = cos(-radRoll);
+	rotatoRoll[1][3] = -sin(-radRoll);
+	rotatoRoll[2][1] = sin(-radRoll);
+	rotatoRoll[2][3] = cos(-radRoll);
+
+	*mRotate = (((rotatoRoll) * rotatoPitch) * rotatoYaw) * *mRotate;
 }
 
 // Scaling matrix
@@ -117,6 +134,7 @@ void viewcontext::out(){
 }
 
 matrix viewcontext::applyTransform(matrix target){
+
 
 	*transform = ((*mTranslate) * *mRotate) * *mScale;
 

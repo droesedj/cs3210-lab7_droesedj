@@ -101,7 +101,7 @@ class GraphicsContext
 		 * Returns: void
 		 */
 		virtual void drawLine(int x0, int y0, int x1, int y1);
-		
+
 		/* This is a naive implementation that uses floating-point math
 		 * and "setPixel" which will need to be provided by the concrete
 		 * implementation.
