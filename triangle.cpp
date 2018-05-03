@@ -85,15 +85,9 @@ void triangle::draw(GraphicsContext* gc, viewcontext* vc){
 	matrix t2(4,4);
 	matrix t3(4,4);
 
-	matrix perspective(4,4);
-	perspective[0][0] = 1;
-	perspective[1][1] = 1;
-	perspective[2][2] = 1;
-	perspective[3][2] = 1;
-
-	t1 = perspective * vc->applyTransform(*p1);
-	t2 = perspective * vc->applyTransform(*p2);
-	t3 = perspective * vc->applyTransform(*p3);
+	t1 = vc->applyTransform(*p1);
+	t2 = vc->applyTransform(*p2);
+	t3 = vc->applyTransform(*p3);
 
 	gc->setColor(color);
 	gc->drawLine(t1[0][0],t1[1][0],

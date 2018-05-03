@@ -56,7 +56,7 @@ public:
 	virtual void paint(GraphicsContext* gc);
 
 	/// Same as paint, but applies viewcontext transforms.
-	virtual void paint(GraphicsContext* gc, viewcontext* vc);
+//	virtual void paint(GraphicsContext* gc, viewcontext* vc);
 	virtual void keyUp(GraphicsContext* gc, unsigned int keycode);
 	virtual void mouseButtonDown(GraphicsContext* gc,
 					unsigned int button, int x, int y);

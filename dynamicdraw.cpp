@@ -60,6 +60,7 @@ void dynamicdraw::paint(GraphicsContext* gc) {
 	// refresh the image.
 	gc->clear();
 
+	// Convert flip the y-axis
 	if(!initialOffsetDone){
 		double xOff = (gc->getWindowWidth()/2.0);
 		double yOff = (gc->getWindowHeight()/2.0);
@@ -71,7 +72,7 @@ void dynamicdraw::paint(GraphicsContext* gc) {
 	theImage->draw(gc,m_vc);
 	gc->setColor(color);
 }
-
+/*
 void dynamicdraw::paint(GraphicsContext* gc, viewcontext* vc) {
 	// refresh the image.
 	gc->clear();
@@ -87,7 +88,7 @@ void dynamicdraw::paint(GraphicsContext* gc, viewcontext* vc) {
 	theImage->draw(gc,vc);
 	gc->setColor(color);
 }
-
+*/
 void dynamicdraw::mouseButtonDown(GraphicsContext* gc, unsigned int button,
 		int x, int y) {
 
@@ -186,9 +187,9 @@ void dynamicdraw::mouseMove(GraphicsContext* gc, int x, int y) {
 		}
 	} else if(drawingMode == DRAWMODE_ROTATE){
 		if(isDragging){
-			if(std::abs(x0 - x) > 4 || std::abs(y0 - y) > 4){
-			m_vc->rotate((x0 - x)/10.0,(y0 - y)/10.0,0);
-			paint(gc,m_vc);
+			if(std::abs(x0 - x) > 10 || std::abs(y0 - y) > 10){
+			m_vc->rotate(-(y0 - y),(x0 - x),0);
+			paint(gc);
 
 
 			x0 = x;
@@ -200,7 +201,7 @@ void dynamicdraw::mouseMove(GraphicsContext* gc, int x, int y) {
 			//paint(gc,m_vc);
 			if(std::abs(x0 - x) > 4 || std::abs(y0 - y) > 4){
 			m_vc->translate(-(x0 - x), -(y0 - y),0);
-			paint(gc,m_vc);
+			paint(gc);
 
 			x0 = x;
 			y0 = y;
@@ -226,40 +227,40 @@ void dynamicdraw::keyUp(GraphicsContext* gc, unsigned int keycode) {
 			return;
 		} else if (keycode == '+') {
 			m_vc->scale(2,2,2);
-			paint(gc, m_vc);
+			paint(gc);
 			return;
 		} else if (keycode == '-') {
 			m_vc->scale(0.5,0.5,0.5);
-			paint(gc, m_vc);
+			paint(gc);
 			return;
 		} else if (keycode == 'z') {
 			m_vc->resetTransforms();
 			initialOffsetDone = false;
-			paint(gc, m_vc);
+			paint(gc);
 			return;
 		}
 
 		if(keycode == '<'){
-			for(int x = 0; x < 90; x+=1){
+			for(int x = 0; x < 18; x+=1){
 				sleep(0.025);
-				m_vc->rotate(0,0,1);
-				paint(gc,m_vc);
+				m_vc->rotate(0,0,5);
+				paint(gc);
 			}
 		}
 
 		if(keycode == '>'){
-			for(int x = 0; x < 90; x+=1){
+			for(int x = 0; x < 18; x+=1){
 				sleep(0.025);
-				m_vc->rotate(0,1,0);
-				paint(gc,m_vc);
+				m_vc->rotate(0,5,0);
+				paint(gc);
 			}
 		}
 
 		if(keycode == '?'){
-			for(int x = 0; x < 90; x+=1){
+			for(int x = 0; x < 18; x+=1){
 				sleep(0.025);
-				m_vc->rotate(1,0,0);
-				paint(gc,m_vc);
+				m_vc->rotate(5,0,0);
+				paint(gc);
 			}
 		}
 

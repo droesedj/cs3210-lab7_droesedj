@@ -63,22 +63,22 @@ void viewcontext::rotate(double roll, double pitch, double yaw){
 	double radYaw = 	yaw * (M_PI/180);
 
 	// Z-axis rotation
-	rotatoYaw[0][0] = cos(radYaw);
-	rotatoYaw[0][1] = -sin(radYaw);
-	rotatoYaw[1][0] = sin(radYaw);
-	rotatoYaw[1][1] = cos(radYaw);
+	rotatoYaw[0][0] = cos(-radYaw);
+	rotatoYaw[0][1] = -sin(-radYaw);
+	rotatoYaw[1][0] = sin(-radYaw);
+	rotatoYaw[1][1] = cos(-radYaw);
 
 	// Y-axis rotation
 	rotatoPitch[0][0] = cos(-radPitch);
 	rotatoPitch[0][2] = sin(-radPitch);
-	rotatoPitch[2][0] = -sin(radPitch);
+	rotatoPitch[2][0] = -sin(-radPitch);
 	rotatoPitch[2][2] = cos(-radPitch);
 
 	// X-axis rotation
 	rotatoRoll[1][1] = cos(-radRoll);
-	rotatoRoll[1][3] = -sin(-radRoll);
+	rotatoRoll[1][2] = -sin(-radRoll);
 	rotatoRoll[2][1] = sin(-radRoll);
-	rotatoRoll[2][3] = cos(-radRoll);
+	rotatoRoll[2][2] = cos(-radRoll);
 
 	*mRotate = (((rotatoRoll) * rotatoPitch) * rotatoYaw) * *mRotate;
 }
@@ -145,6 +145,8 @@ matrix viewcontext::perspectiveTrans(double angle, double far, double near){
 	perspective[2][3] = -1;
 	perspective[3][3] = 0;
 
+
+
 	return perspective;
 
 
@@ -154,7 +156,8 @@ matrix viewcontext::perspectiveTrans(double angle, double far, double near){
 matrix viewcontext::applyTransform(matrix target){
 
 
-	*transform = ((((perspectiveTrans(90,10,0.1) * *mTranslate)) * *mRotate) * *mScale);
+	//*transform = perspectiveTrans(40,10,0.1) * ((((*mTranslate)) * *mRotate) * *mScale);
+	*transform = (((*mTranslate) * *mRotate) * *mScale);
 
 	return *transform * target;
 }
