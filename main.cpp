@@ -53,12 +53,14 @@ int main(int argc, char**argv) {
 		if(arg2.compare("STL") == 0){
 			// load STL file
 			dd.theImage->parseSTLFile(arg3);
+			dd.theImage->addAxisHelpers(20);
 			dd.paint(gc);
 			std::cout << "LOADED STL FILE: " << arg3 << '\n';
 		} else if(arg2.compare("IMG") == 0){
 		// Load old image file
 			if (input.is_open()) {
 				dd.theImage->in(input);
+				dd.theImage->addAxisHelpers(20);
 				dd.paint(gc);
 				std::cout << "LOADED IMAGE FILE: " << arg3 << '\n';
 				input.close();

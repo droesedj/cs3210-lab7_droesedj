@@ -84,6 +84,8 @@ private:
 
 	/// Whether or not the mouse is being dragged.
 	bool isDragging;
+
+	bool initialOffsetDone;
 };
 
 

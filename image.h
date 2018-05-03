@@ -106,7 +106,17 @@ public:
 	*/
 	void in(std::istream& input);
 
+	/**
+	 * Reads in an ASCII STL file and adds the triangles to the image.
+	 * @param file STL file to read in.
+	 */
 	void parseSTLFile(std::string file);
+
+	/**
+	 * Draws axis helpers depicting the X, Y, and Z-axis directions.
+	 * @param scale
+	 */
+	void addAxisHelpers(double scale);
 
 };
 

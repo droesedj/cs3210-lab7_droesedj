@@ -20,6 +20,7 @@ matrix inverseCorrect(double x0, double y0, double z0,
 //=================================================
 
 dynamicdraw::dynamicdraw() {
+	initialOffsetDone = false;
 	m_vc = new viewcontext();
 	color = GraphicsContext::WHITE;
 	theImage = new image();
@@ -35,6 +36,7 @@ dynamicdraw::dynamicdraw() {
 }
 
 dynamicdraw::dynamicdraw(viewcontext* vc) {
+	initialOffsetDone = false;
 	m_vc = vc;
 	color = GraphicsContext::WHITE;
 	theImage = new image();
@@ -57,6 +59,15 @@ dynamicdraw::~dynamicdraw() {
 void dynamicdraw::paint(GraphicsContext* gc) {
 	// refresh the image.
 	gc->clear();
+
+	if(!initialOffsetDone){
+		double xOff = (gc->getWindowWidth()/2.0);
+		double yOff = (gc->getWindowHeight()/2.0);
+		m_vc->translate(xOff,yOff,0.0);
+		m_vc->scale(1,-1,1);
+		initialOffsetDone = true;
+	}
+
 	theImage->draw(gc,m_vc);
 	gc->setColor(color);
 }
@@ -64,6 +75,15 @@ void dynamicdraw::paint(GraphicsContext* gc) {
 void dynamicdraw::paint(GraphicsContext* gc, viewcontext* vc) {
 	// refresh the image.
 	gc->clear();
+
+	if(!initialOffsetDone){
+		double xOff = (gc->getWindowWidth()/2.0);
+		double yOff = (gc->getWindowHeight()/2.0);
+		vc->translate(xOff,yOff,0.0);
+		vc->scale(1,-1,1);
+		initialOffsetDone = true;
+	}
+
 	theImage->draw(gc,vc);
 	gc->setColor(color);
 }
@@ -214,24 +234,15 @@ void dynamicdraw::keyUp(GraphicsContext* gc, unsigned int keycode) {
 			return;
 		} else if (keycode == 'z') {
 			m_vc->resetTransforms();
+			initialOffsetDone = false;
 			paint(gc, m_vc);
 			return;
 		}
 
 		if(keycode == '<'){
-			for(int x = 0; x < 360; x++){
-				sleep(0.005);
-				m_vc->rotate(1,0,0);
-				paint(gc,m_vc);
-			}
-			for(int x = 0; x < 360; x++){
-				sleep(0.015);
-				m_vc->rotate(0,1,0);
-				paint(gc,m_vc);
-			}
-			for(int x = 0; x < 360; x++){
-				sleep(0.015);
-				m_vc->rotate(0,0,1);
+			for(int x = 0; x < 90; x+=1){
+				sleep(0.025);
+				m_vc->rotate(1,1,0);
 				paint(gc,m_vc);
 			}
 		}

@@ -61,7 +61,7 @@ void line::draw(GraphicsContext* gc, viewcontext* vc){
 	t2 = vc->applyTransform(*p2);
 
 	gc->setColor(color);
-	gc->drawLine((int)t1[0][0],(int)t1[1][0],(int)t2[0][0],(int)t2[1][0]);
+	gc->drawLine(t1[0][0],t1[1][0],t2[0][0],t2[1][0]);
 }
 
 std::ostream& line::out(std::ostream& output){

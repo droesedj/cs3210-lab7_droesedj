@@ -122,15 +122,10 @@ std::ostream& image::out(std::ostream& output){
  * @return Solid parsed from the file.
  *
  * Assumes that the file has proper formatting.
- * This WILL hang if the file does not have proper formatting.
+ * This WILL perform unexpected behavior if the
+ * file does not have proper formatting.
  */
 void image::parseSTLFile(std::string file){
-	//solid* output = nullptr;
-	//vertex* vertexHead = nullptr;
-	//facet* facetHead = nullptr;
-
-	//vertex* vertIterator = nullptr;
-	//facet* faceIterator = nullptr;
 
 	matrix* p1 = nullptr;
 	matrix* p2 = nullptr;
@@ -148,18 +143,9 @@ void image::parseSTLFile(std::string file){
 			stringstream(line) >> word;
 
 			if(word.compare("solid") == 0){
-				// Create the solid from the line
-				//output = parseSolid(line);
+
 			} else if(word.compare("facet") == 0){
-				//if(facetHead == nullptr){
-					// First facet in the solid, init the head and iterator.
-				//	facetHead = parseFacet(line);
-				//	faceIterator = facetHead;
-				//} else {
-					// Facet comes after the head, advance the iterator and append the new one onto the previous.
-				//	faceIterator->setNext(parseFacet(line));
-				//	faceIterator = faceIterator->getNext();
-				//}
+
 			} else if(word.compare("outer") == 0){
 				// Start of a vertex loop.  Don't really need to do anything about it though.
 				p1 = nullptr;
@@ -176,17 +162,11 @@ void image::parseSTLFile(std::string file){
 					this->add(new triangle(p1,p2,p3));
 				}
 			}else if(word.compare("endfacet") == 0){
-				// End of a facet, attach to the solid, clear the head and iterator.
+
 			} else if(word.compare("endsolid") == 0){
-				// End of the solid.  Attach the facet head to the solid output.  Clear the iterators.
-				//faceIterator = nullptr;
-				//output->setStartFacet(facetHead);
-				//facetHead = nullptr;
+
 			} else if(word.compare("endloop") == 0){
-				// End of a vertex loop, attach the verts to the current facet, clear the head and iterator.
-				//vertIterator = nullptr;
-				//faceIterator->setFirstVertex(vertexHead);
-				//vertexHead = nullptr;
+
 			} else {
 				// Garbage or invalid keyword.  Yell into the console.
 				cout << "COULD NOT FIGURE OUT WHAT " << word << " IS SUPPOSED TO BE!" << '\n';
@@ -195,9 +175,23 @@ void image::parseSTLFile(std::string file){
 		STL.close();
 	} else {
 		cout << "Error loading file: " << file << '\n';
-		//return nullptr;
 	}
-	//return output;
+}
+
+
+void image::addAxisHelpers(double scale){
+	// X = red line
+	this->add(new line(0,0,0,
+					   scale,0,0,
+					   GraphicsContext::RED));
+	// Y = green line
+	this->add(new line(0,0,0,
+					   0,scale,0,
+					   GraphicsContext::GREEN));
+	// Z = blue line
+	this->add(new line(0,0,0,
+					   0,0,scale,
+					   GraphicsContext::BLUE));
 }
 
 
