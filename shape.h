@@ -144,9 +144,6 @@ public:
 class line: public shape {
 protected:
 
-	/// Matrix representing the coordinates of the second point of the line.
-	matrix* p2;
-
 public:
 	/// Constructs a line with given coordinates.
 	line(double x0, double y0, double z0,
@@ -252,11 +249,6 @@ public:
 class triangle: public shape {
 protected:
 
-	/// Second corner point of the triangle.
-	matrix* p2;
-	/// Third corner point of the triangle.
-	matrix* p3;
-
 public:
 	/// Construct a triangle explicitly with 3 given coordinate points.
 	triangle(double x, double y, double z,
@@ -269,8 +261,6 @@ public:
 				 double x2, double y2, double z2,
 				 unsigned int col);
 
-	/// Construct a triangle with 3 matrices of coordinates.
-	triangle(matrix* m0, matrix* m1, matrix* m2);
 	~triangle();
 	triangle& operator=(const triangle& from);
 	void draw(GraphicsContext* gc);

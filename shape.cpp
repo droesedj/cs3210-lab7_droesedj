@@ -11,7 +11,7 @@
 shape::shape(){
 	// default color
 	color = GraphicsContext::WHITE;
-	p1 = new matrix(4,1);
+	p1 = new matrix(4,4);
 }
 
 shape::~shape(){

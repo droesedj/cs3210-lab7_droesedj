@@ -17,7 +17,7 @@ using namespace std;
 
 
 
-matrix* parseVertex(string data);
+bool parseVertex(string data, double* x, double* y, double* z);
 
 
 image::image(){}
@@ -127,9 +127,17 @@ std::ostream& image::out(std::ostream& output){
  */
 void image::parseSTLFile(std::string file){
 
-	matrix* p1 = nullptr;
-	matrix* p2 = nullptr;
-	matrix* p3 = nullptr;
+	double* x = new double;
+	double* y = new double;
+	double* z = new double;
+
+	double x0,y0,z0,x1,y1,z1,x2,y2,z2;
+	x0 = 0; y0 = 0; z0 = 0;
+	x1 = 0; y1 = 0; z1 = 0;
+	x2 = 0; y2 = 0; z2 = 0;
+	bool p1 = false;
+	bool p2 = false;
+	bool p3 = false;
 
 	string line;
 	ifstream STL (file);
@@ -148,18 +156,30 @@ void image::parseSTLFile(std::string file){
 
 			} else if(word.compare("outer") == 0){
 				// Start of a vertex loop.  Don't really need to do anything about it though.
-				p1 = nullptr;
-				p2 = nullptr;
-				p3 = nullptr;
+				p1 = false;
+				p2 = false;
+				p3 = false;
 			} else if(word.compare("vertex") == 0){
-				if(p1 == nullptr){
-					p1 = parseVertex(line);
-				} else if(p2 == nullptr){
-					p2 = parseVertex(line);
-				} else if(p3 == nullptr){
-					p3 = parseVertex(line);
+				if(!p1){
+					p1 = parseVertex(line,x,y,z);
+					x0 = *x;
+					y0 = *y;
+					z0 = *z;
+
+				} else if(!p2){
+					p2 = parseVertex(line,x,y,z);
+					x1 = *x;
+					y1 = *y;
+					z1 = *z;
+				} else if(!p3){
+					p3 = parseVertex(line,x,y,z);
+					x2 = *x;
+					y2 = *y;
+					z2 = *z;
 					// create a new triangle.
-					this->add(new triangle(p1,p2,p3));
+					this->add(new triangle(x0,y0,z0,
+										   x1,y1,z1,
+										   x2,y2,z2));
 				}
 			}else if(word.compare("endfacet") == 0){
 
@@ -176,6 +196,10 @@ void image::parseSTLFile(std::string file){
 	} else {
 		cout << "Error loading file: " << file << '\n';
 	}
+
+	delete x;
+	delete y;
+	delete z;
 }
 
 
@@ -200,19 +224,12 @@ void image::addAxisHelpers(double scale){
  * Expects data to be in the following format:
  * "vertex <float x> <float y> <float z>"
  * @param data
- * @return Pointer to the newly-created matrix.
+ * @return true
  */
-matrix* parseVertex(string data){
-	double f1, f2, f3;
+bool parseVertex(string data, double* x, double* y, double* z){
 	string garbage;
 
-	stringstream(data) >> garbage >> f1 >> f2 >> f3;
+	stringstream(data) >> garbage >> *x >> *y >> *z;
 
-	matrix* output = new matrix(4,1);
-	(*output)[0][0] = f1;
-	(*output)[1][0] = f2;
-	(*output)[2][0] = f3;
-	(*output)[3][0] = 1.0;
-
-	return output;
+	return true;
 }
