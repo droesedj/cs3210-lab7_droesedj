@@ -242,7 +242,23 @@ void dynamicdraw::keyUp(GraphicsContext* gc, unsigned int keycode) {
 		if(keycode == '<'){
 			for(int x = 0; x < 90; x+=1){
 				sleep(0.025);
-				m_vc->rotate(1,1,0);
+				m_vc->rotate(0,0,1);
+				paint(gc,m_vc);
+			}
+		}
+
+		if(keycode == '>'){
+			for(int x = 0; x < 90; x+=1){
+				sleep(0.025);
+				m_vc->rotate(0,1,0);
+				paint(gc,m_vc);
+			}
+		}
+
+		if(keycode == '?'){
+			for(int x = 0; x < 90; x+=1){
+				sleep(0.025);
+				m_vc->rotate(1,0,0);
 				paint(gc,m_vc);
 			}
 		}

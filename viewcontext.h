@@ -66,6 +66,9 @@ public:
 	 */
 	matrix applyInverse(matrix target);
 
+
+	matrix perspectiveTrans(double angle, double far, double near);
+
 	/**
 	 * Clear the transform and inverse matrices.
 	 */

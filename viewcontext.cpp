@@ -133,10 +133,28 @@ void viewcontext::out(){
 	std::cout << *transform;
 }
 
+matrix viewcontext::perspectiveTrans(double angle, double far, double near){
+
+	matrix perspective(4,4);
+	double S = 1 / tan(angle * 0.5 * M_PI / 180);
+
+	perspective[0][0] = S;
+	perspective[1][1] = S;
+	perspective[2][2] = -far / (far - near);
+	perspective[3][2] = -far * near / (far - near);
+	perspective[2][3] = -1;
+	perspective[3][3] = 0;
+
+	return perspective;
+
+
+}
+
+
 matrix viewcontext::applyTransform(matrix target){
 
 
-	*transform = ((*mTranslate) * *mRotate) * *mScale;
+	*transform = ((((perspectiveTrans(90,10,0.1) * *mTranslate)) * *mRotate) * *mScale);
 
 	return *transform * target;
 }
