@@ -52,8 +52,23 @@ void line::draw(GraphicsContext* gc, viewcontext* vc){
 	matrix t1(4,4);
 	t1 = vc->applyTransform(*p1);
 
+	if(t1[3][0] != 1.0){
+		for(int i = 0; i < 4; i++){
+			t1[i][0] = t1[i][0] / t1[3][0];
+		}
+	}
+
+	if(t1[3][1] != 1.0){
+		for(int i = 0; i < 4; i++){
+			t1[i][1] = t1[i][1] / t1[3][1];
+		}
+	}
+
 	gc->setColor(color);
-	gc->drawLine(t1[0][0],t1[1][0],t1[0][1],t1[1][1]);
+	gc->drawLine(t1[0][0]*800 + 400,t1[1][0]*600 + 300,
+				 t1[0][1]*800 + 400,t1[1][1]*600 + 300);
+
+	//gc->drawLine(t1[0][0],t1[1][0],t1[0][1],t1[1][1]);
 }
 
 std::ostream& line::out(std::ostream& output){

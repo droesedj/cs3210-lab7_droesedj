@@ -62,9 +62,9 @@ void dynamicdraw::paint(GraphicsContext* gc) {
 
 	// Convert flip the y-axis
 	if(!initialOffsetDone){
-		double xOff = (gc->getWindowWidth()/2.0);
-		double yOff = (gc->getWindowHeight()/2.0);
-		m_vc->translate(xOff,yOff,0.0);
+		//double xOff = (gc->getWindowWidth()/2.0);
+		//double yOff = (gc->getWindowHeight()/2.0);
+		//m_vc->translate(xOff,yOff,0.0);
 		m_vc->scale(1,-1,1);
 		initialOffsetDone = true;
 	}
@@ -200,7 +200,7 @@ void dynamicdraw::mouseMove(GraphicsContext* gc, int x, int y) {
 		if(isDragging){
 			//paint(gc,m_vc);
 			if(std::abs(x0 - x) > 4 || std::abs(y0 - y) > 4){
-			m_vc->translate(-(x0 - x), -(y0 - y),0);
+			m_vc->translate(-(x0 - x) / 100.0, -(y0 - y) / 100.0,0);
 			paint(gc);
 
 			x0 = x;
@@ -262,6 +262,17 @@ void dynamicdraw::keyUp(GraphicsContext* gc, unsigned int keycode) {
 				m_vc->rotate(5,0,0);
 				paint(gc);
 			}
+		}
+
+
+		if(keycode == '['){
+			m_vc->FOV = m_vc->FOV - 5;
+			paint(gc);
+		}
+
+		if(keycode == ']'){
+			m_vc->FOV = m_vc->FOV + 5;
+			paint(gc);
 		}
 
 		// Color selection

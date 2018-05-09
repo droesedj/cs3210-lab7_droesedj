@@ -74,14 +74,8 @@ public:
 	 */
 	void resetTransforms();
 
-	/// X-location of the viewport
-	double origin_x;
-
-	/// Y-location of the viewport
-	double origin_y;
-
-	/// Z-location of the viewport
-	double origin_z;
+	/// viewport Field-Of-View
+	double FOV;
 
 private:
 

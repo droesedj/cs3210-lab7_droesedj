@@ -25,7 +25,9 @@ triangle::triangle(double x,  double y,  double z,
 	(*p1)[1][2] = y2;
 	(*p1)[2][2] = z2;
 	(*p1)[3][2] = 1.0;
-	(*p1)[3][3] = 1.0;
+
+
+//	(*p1)[3][3] = 1.0;
 }
 
 triangle::triangle(double x,  double y,  double z,
@@ -45,7 +47,8 @@ triangle::triangle(double x,  double y,  double z,
 	(*p1)[1][2] = y2;
 	(*p1)[2][2] = z2;
 	(*p1)[3][2] = 1.0;
-	(*p1)[3][3] = 1.0;
+//	(*p1)[3][3] = 1.0;
+
 	color = col;
 }
 
@@ -69,15 +72,64 @@ void triangle::draw(GraphicsContext* gc){
 void triangle::draw(GraphicsContext* gc, viewcontext* vc){
 	matrix t1(4,4);
 
+/*	int h = gc->getWindowHeight();
+	int w = gc->getWindowWidth();
+	int hh = h/2;
+	int hw = w/2;
+*/
+	int h = 600;
+	int hh = 300;
+	int w = 800;
+	int hw = 400;
+
 	t1 = vc->applyTransform(*p1);
 
+
+	if(t1[3][0] != 1.0){
+		for(int i = 0; i < 4; i++){
+			t1[i][0] = t1[i][0] / t1[3][0];
+		}
+	}
+
+	if(t1[3][1] != 1.0){
+		for(int i = 0; i < 4; i++){
+			t1[i][1] = t1[i][1] / t1[3][1];
+		}
+	}
+
+	if(t1[3][2] != 1.0){
+		for(int i = 0; i < 4; i++){
+			t1[i][2] = t1[i][2] / t1[3][2];
+		}
+	}
+
+	//re-scale for new view.
+
 	gc->setColor(color);
-	gc->drawLine(t1[0][0],t1[1][0],
-				 t1[0][1],t1[1][1]);
-	gc->drawLine(t1[0][1],t1[1][1],
-				 t1[0][2],t1[1][2]);
-	gc->drawLine(t1[0][2],t1[1][2],
-				 t1[0][0],t1[1][0]);
+	gc->drawLine(t1[0][0]*w + hw,t1[1][0]*h + hh,
+				 t1[0][1]*w + hw,t1[1][1]*h + hh);
+	gc->drawLine(t1[0][1]*w + hw,t1[1][1]*h + hh,
+				 t1[0][2]*w + hw,t1[1][2]*h + hh);
+	gc->drawLine(t1[0][2]*w + hw,t1[1][2]*h + hh,
+				 t1[0][0]*w + hw,t1[1][0]*h + hh);
+
+
+
+/*	gc->drawLine(t1[0][0]*800,t1[1][0]*600,
+				 t1[0][1]*800,t1[1][1]*600);
+	gc->drawLine(t1[0][1]*800,t1[1][1]*600,
+				 t1[0][2]*800,t1[1][2]*600);
+	gc->drawLine(t1[0][2]*800,t1[1][2]*600,
+				 t1[0][0]*800,t1[1][0]*600);
+*/
+
+/*	gc->drawLine(t1[0][0],t1[1][0],
+					 t1[0][1],t1[1][1]);
+		gc->drawLine(t1[0][1],t1[1][1],
+					 t1[0][2],t1[1][2]);
+		gc->drawLine(t1[0][2],t1[1][2],
+					 t1[0][0],t1[1][0]);
+*/
 }
 
 std::ostream& triangle::out(std::ostream& output){
