@@ -139,13 +139,6 @@ matrix viewcontext::perspectiveTrans(double angle, double far, double near){
 	perspective[1][1] = 1.0 / tan(angle * 0.5 * M_PI / 180);
 	perspective[2][2] = -far / (far - near);
 	perspective[3][2] = -(far * near) / (far - near);
-/*	perspective[2][3] = -1;
-	perspective[3][3] = 0;
-*/
-
-//	perspective[0][0] = 1;
-//	perspective[1][1] = 1;
-//	perspective[3][2] = -1/far;
 	perspective[3][3] = 1;
 
 
@@ -159,7 +152,6 @@ matrix viewcontext::perspectiveTrans(double angle, double far, double near){
 matrix viewcontext::applyTransform(matrix target){
 
 	*transform = perspectiveTrans(FOV,1,100) * ((((*mTranslate)) * *mRotate) * *mScale);
-	//*transform = (((*mTranslate) * *mRotate) * *mScale);
 
 	return *transform * target;
 }

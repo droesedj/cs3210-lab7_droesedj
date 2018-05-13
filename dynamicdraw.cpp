@@ -1,5 +1,5 @@
 /**
- *	LAB WEEK 6: DRAWING EVENTS
+ *	LAB WEEK 7: STL Viewer
  *	CS3210
  *	@author Dennis Droese
  *	@date April 18, 2018
@@ -40,7 +40,7 @@ dynamicdraw::dynamicdraw(viewcontext* vc) {
 	m_vc = vc;
 	color = GraphicsContext::WHITE;
 	theImage = new image();
-	drawingMode = DRAWMODE_POINT;
+	drawingMode = DRAWMODE_ROTATE;
 	state = STATE_NEWTRI;
 	isDragging = false;
 	x0 = 0;
@@ -72,23 +72,7 @@ void dynamicdraw::paint(GraphicsContext* gc) {
 	theImage->draw(gc,m_vc);
 	gc->setColor(color);
 }
-/*
-void dynamicdraw::paint(GraphicsContext* gc, viewcontext* vc) {
-	// refresh the image.
-	gc->clear();
 
-	if(!initialOffsetDone){
-		double xOff = (gc->getWindowWidth()/2.0);
-		double yOff = (gc->getWindowHeight()/2.0);
-		vc->translate(xOff,yOff,0.0);
-		vc->scale(1,-1,1);
-		initialOffsetDone = true;
-	}
-
-	theImage->draw(gc,vc);
-	gc->setColor(color);
-}
-*/
 void dynamicdraw::mouseButtonDown(GraphicsContext* gc, unsigned int button,
 		int x, int y) {
 
@@ -188,7 +172,7 @@ void dynamicdraw::mouseMove(GraphicsContext* gc, int x, int y) {
 	} else if(drawingMode == DRAWMODE_ROTATE){
 		if(isDragging){
 			if(std::abs(x0 - x) > 10 || std::abs(y0 - y) > 10){
-			m_vc->rotate(-(y0 - y),(x0 - x),0);
+			m_vc->rotate((y0 - y),-(x0 - x),0);
 			paint(gc);
 
 
@@ -200,7 +184,7 @@ void dynamicdraw::mouseMove(GraphicsContext* gc, int x, int y) {
 		if(isDragging){
 			//paint(gc,m_vc);
 			if(std::abs(x0 - x) > 4 || std::abs(y0 - y) > 4){
-			m_vc->translate(-(x0 - x) / 100.0, -(y0 - y) / 100.0,0);
+			m_vc->translate(-(x0 - x) / 400.0, -(y0 - y) / 400.0,0);
 			paint(gc);
 
 			x0 = x;
@@ -214,10 +198,7 @@ void dynamicdraw::keyUp(GraphicsContext* gc, unsigned int keycode) {
 	if (!isDragging && state != STATE_ENDTRI) {
 		// not allowed to change tools while dragging or completing a triangle.
 		if (keycode == 't') {
-			drawingMode = DRAWMODE_TRI;
 			return;
-
-
 			/// Tool modes for transforming image
 		} else if (keycode == 'r') {
 			drawingMode = DRAWMODE_ROTATE;

@@ -25,9 +25,6 @@ triangle::triangle(double x,  double y,  double z,
 	(*p1)[1][2] = y2;
 	(*p1)[2][2] = z2;
 	(*p1)[3][2] = 1.0;
-
-
-//	(*p1)[3][3] = 1.0;
 }
 
 triangle::triangle(double x,  double y,  double z,
@@ -47,7 +44,6 @@ triangle::triangle(double x,  double y,  double z,
 	(*p1)[1][2] = y2;
 	(*p1)[2][2] = z2;
 	(*p1)[3][2] = 1.0;
-//	(*p1)[3][3] = 1.0;
 
 	color = col;
 }
